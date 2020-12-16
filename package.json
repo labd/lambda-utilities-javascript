@@ -30,7 +30,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "lambda-utilities",
+  "name": "@labd/lambda-utilities",
   "author": "Bram Kaashoek",
   "module": "dist/lambda-utilities.esm.js",
   "size-limit": [
