@@ -25,11 +25,10 @@ export const sendMessage = async (data: any) => {
     const data = await sqs.sendMessage(params).promise();
     const resp = data.$response;
 
-    console.info('--------');
-    console.info('messageId:', data.MessageId);
-    console.info('data:', resp.data);
-    if (resp.error) console.info('error:', resp.error);
-    console.info('********');
+    console.info('Send message to SQS queue');
+    console.info(' > messageId:', data.MessageId);
+    console.info(' > data:', resp.data);
+    if (resp.error) console.error(' > error:', resp.error);
   } catch (error) {
     console.error(JSON.stringify(error));
   }
