@@ -50,6 +50,7 @@
     "@sentry/integrations": "5.29.2",
     "@sentry/serverless": "5.29.2",
     "@sentry/tracing": "5.29.2",
+    "apollo-server-koa": "^2.19.1",
     "koa": "2.13.1"
   },
   "devDependencies": {

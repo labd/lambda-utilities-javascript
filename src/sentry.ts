@@ -30,4 +30,4 @@ AWSLambda.configureScope(function(scope) {
   scope.setTag('site', process.env.SITE || '');
 });
 
-export default AWSLambda;
+export const Sentry = AWSLambda;
