@@ -1,2 +1,2 @@
 import { getSecret } from './secrets';
-export default { getSecret };
+export { getSecret };

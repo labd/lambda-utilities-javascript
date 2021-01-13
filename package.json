@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -9,6 +9,9 @@
   ],
   "engines": {
     "node": ">=10"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "start": "tsdx watch",
@@ -30,7 +33,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "@labd/lambda-utilities",
+  "name": "@labdigital/lambda-utilities",
   "author": "Bram Kaashoek",
   "module": "dist/lambda-utilities.esm.js",
   "size-limit": [
