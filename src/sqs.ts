@@ -1,6 +1,5 @@
 import AWS from 'aws-sdk';
 import SQS from 'aws-sdk/clients/sqs';
-import assert from 'assert';
 
 const sqs = new SQS({
   region: process.env.AWS_REGION,
@@ -10,15 +9,15 @@ const sqs = new SQS({
     : undefined,
 });
 
-export const sendMessage = async (data: any) => {
-  assert(process.env.SQS_QUEUE_URL, 'SQS_QUEUE_URL missing');
-  const queue_url = process.env.SQS_QUEUE_URL;
-
+/*
+ * data should NOT yet be stringified
+ */
+export const sendSqsMessage = async (queueUrl: string, data: any) => {
   var params = {
     DelaySeconds: 10,
     MessageAttributes: {},
     MessageBody: JSON.stringify(data),
-    QueueUrl: queue_url,
+    QueueUrl: queueUrl,
   };
 
   try {
