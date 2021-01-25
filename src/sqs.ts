@@ -18,7 +18,6 @@ export const sendSqsMessage = async (
   messageGroupId?: string
 ) => {
   var params = {
-    DelaySeconds: 10,
     MessageAttributes: {},
     MessageBody: JSON.stringify(data),
     QueueUrl: queueUrl,
