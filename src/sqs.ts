@@ -12,12 +12,17 @@ const sqs = new SQS({
 /*
  * data should NOT yet be stringified
  */
-export const sendSqsMessage = async (queueUrl: string, data: any) => {
+export const sendSqsMessage = async (
+  queueUrl: string,
+  data: any,
+  messageGroupId?: string
+) => {
   var params = {
     DelaySeconds: 10,
     MessageAttributes: {},
     MessageBody: JSON.stringify(data),
     QueueUrl: queueUrl,
+    MessageGroupId: messageGroupId,
   };
 
   try {
