@@ -49,15 +49,15 @@
   "dependencies": {
     "@sentry/integrations": "5.29.2",
     "@sentry/serverless": "5.29.2",
-    "@sentry/tracing": "5.29.2"
+    "@sentry/tracing": "5.29.2",
+    "apollo-server-koa": "^2.19.1",
+    "koa": "^2.13.1"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.9.1",
     "@types/koa": "2.11.6",
-    "apollo-server-koa": "^2.19.1",
     "aws-sdk": "2.795.0",
     "husky": "^4.3.6",
-    "koa": "2.13.1",
     "size-limit": "^4.9.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.0.3",
