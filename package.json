@@ -63,7 +63,6 @@
   },
   "peerDependencies": {
     "aws-sdk": "2.795.0",
-    "apollo-server-koa": "^2.19.1",
     "koa": "^2.13.1"
   }
 }

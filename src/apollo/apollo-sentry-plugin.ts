@@ -1,4 +1,3 @@
-import { ApolloError } from 'apollo-server-koa';
 import { Sentry } from '../sentry';
 
 export const apolloSentryPlugin = {
@@ -6,11 +5,6 @@ export const apolloSentryPlugin = {
     return {
       didEncounterErrors(ctx: any) {
         for (const err of ctx.errors) {
-          // ApolloErrors are user facing, we are interested in internal errors
-          if (err instanceof ApolloError) {
-            continue;
-          }
-
           Sentry.withScope(scope => {
             scope.setTag('kind', ctx.operation.operation);
             scope.setExtra('query', ctx.request.query);
