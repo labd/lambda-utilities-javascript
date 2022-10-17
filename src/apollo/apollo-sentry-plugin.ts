@@ -1,3 +1,4 @@
+import { SeverityLevel } from '@sentry/serverless';
 import { Sentry } from '../sentry';
 
 export const apolloSentryPlugin = {
@@ -13,7 +14,7 @@ export const apolloSentryPlugin = {
               scope.addBreadcrumb({
                 category: 'query-path',
                 message: err.path.join(' > '),
-                level: Sentry.Severity.Debug,
+                level: 'debug' as SeverityLevel,
               });
             }
             Sentry.captureException(err);
