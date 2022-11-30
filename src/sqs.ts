@@ -1,12 +1,9 @@
-import AWS from 'aws-sdk';
-import SQS from 'aws-sdk/clients/sqs';
+import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 
-const sqs = new SQS({
+const sqs = new SQSClient({
   region: process.env.AWS_REGION,
   apiVersion: '2012-11-05',
-  endpoint: process.env.LOCALSTACK_URL
-    ? new AWS.Endpoint(process.env.LOCALSTACK_URL)
-    : undefined,
+  endpoint: process.env.LOCALSTACK_URL,
 });
 
 /*
@@ -25,13 +22,12 @@ export const sendSqsMessage = async (
   };
 
   try {
-    const data = await sqs.sendMessage(params).promise();
-    const resp = data.$response;
+    const command = new SendMessageCommand(params);
+    const data = await sqs.send(command);
 
     console.info('Send message to SQS queue');
     console.info(' > messageId:', data.MessageId);
-    console.info(' > data:', resp.data);
-    if (resp.error) console.error(' > error:', resp.error);
+    console.info(' > data:', data);
   } catch (error) {
     console.error(JSON.stringify(error));
   }

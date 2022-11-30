@@ -1,4 +1,7 @@
-import AWS from 'aws-sdk';
+import {
+  SecretsManagerClient,
+  GetSecretValueCommand,
+} from '@aws-sdk/client-secrets-manager';
 import assert from 'assert';
 
 assert(
@@ -6,34 +9,29 @@ assert(
   'getSecret requires process.env.AWS_REGION to be set'
 );
 
-const client = new AWS.SecretsManager({
+const client = new SecretsManagerClient({
   region: process.env.AWS_REGION,
-  endpoint: process.env.LOCALSTACK_URL
-    ? new AWS.Endpoint(process.env.LOCALSTACK_URL)
-    : undefined,
+  endpoint: process.env.LOCALSTACK_URL,
 });
 
 export const getSecret = async (secretName: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    client.getSecretValue({ SecretId: secretName }, (err, data) => {
-      if (err) {
-        console.error(err);
-        return reject(err);
-      }
+  return new Promise(async (resolve, reject) => {
+    try {
+      const command = new GetSecretValueCommand({ SecretId: secretName });
+      const response = await client.send(command);
 
-      if (!data) {
+      if (!response) {
         return reject(new Error('no data from secretsmanager'));
       }
 
-      if (data.SecretString) return resolve(data.SecretString);
+      if (response.SecretString) return resolve(response.SecretString);
 
-      if (data.SecretBinary) {
+      if (response.SecretBinary) {
         let buff: Buffer;
-        if (typeof data.SecretBinary == 'string') {
-          buff = Buffer.from(data.SecretBinary, 'base64');
+        if (typeof response.SecretBinary == 'string') {
+          buff = Buffer.from(response.SecretBinary, 'base64');
         } else {
-          // @ts-ignore
-          buff = Buffer.from(data.SecretBinary);
+          buff = Buffer.from(response.SecretBinary);
         }
         return resolve(buff.toString('ascii'));
       }
@@ -41,6 +39,9 @@ export const getSecret = async (secretName: string): Promise<string> => {
       throw new Error(
         `Could not get string or binary secret for ${secretName}`
       );
-    });
+    } catch (err) {
+      console.error(err);
+      return reject(err);
+    }
   });
 };
