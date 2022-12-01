@@ -3,27 +3,32 @@ import {
   RewriteFrames,
   Transaction,
   CaptureConsole,
+  ExtraErrorData,
 } from '@sentry/integrations';
-import { addExtensionMethods } from '@sentry/tracing';
 
 if (process.env.SENTRY_DSN) {
-  addExtensionMethods();
-
   AWSLambda.init({
     dsn: process.env.SENTRY_DSN,
-    tracesSampleRate: 1.0,
     enabled: !!process.env.SENTRY_DSN,
     environment: process.env.ENVIRONMENT,
     release: process.env.RELEASE,
     integrations: [
-      new Integrations.Console(),
-      new RewriteFrames(),
-      new Transaction(),
-      new Integrations.Http({ tracing: true }),
       new CaptureConsole({
         levels: ['warning', 'error'],
       }),
+      new RewriteFrames({
+        root: '../var/task/',
+      }),
+      new ExtraErrorData({ depth: 5 }),
+      new Transaction(),
+      new Integrations.Console(),
+      new Integrations.Http({ tracing: false }),
+      new Integrations.LinkedErrors(),
+      new Integrations.OnUncaughtException(),
+      new Integrations.OnUnhandledRejection(),
     ],
+    tracesSampleRate: 0,
+    ignoreErrors: [/Failed extracting version/],
   });
 
   AWSLambda.configureScope(function(scope) {
