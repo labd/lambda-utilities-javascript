@@ -74,7 +74,7 @@ export default (options = {}) => {
       await next();
       ctx.__logger.status = ctx.status;
     } catch (err) {
-      await opt.onError(ctx, err);
+      await opt.onError(ctx, err as Error);
     } finally {
       await opt.onEnd(ctx);
     }
