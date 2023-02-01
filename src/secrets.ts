@@ -1,6 +1,6 @@
 import {
-  SecretsManagerClient,
   GetSecretValueCommand,
+  SecretsManagerClient,
 } from '@aws-sdk/client-secrets-manager';
 import assert from 'assert';
 
@@ -44,4 +44,29 @@ export const getSecret = async (secretName: string): Promise<string> => {
       return reject(err);
     }
   });
+};
+
+const secretCache: Record<string, string> = {};
+
+export const getAppSecret = async (secretName: string) => {
+  if (secretCache[secretName]) {
+    return secretCache[secretName];
+  }
+
+  const envValue =
+    process.env.NODE_ENV !== 'production' ? process.env[secretName] : undefined;
+  if (envValue) {
+    secretCache[secretName] = envValue;
+    return envValue;
+  }
+
+  const secretEnvKey = `${secretName}_SECRET_NAME`;
+  const awsSecretName = process.env[secretEnvKey];
+  if (!awsSecretName) {
+    throw new Error(`No env variable for ${secretEnvKey}`);
+  }
+
+  const secretsManagerValue = await getSecret(awsSecretName);
+  secretCache[secretName] = secretsManagerValue;
+  return secretsManagerValue;
 };
