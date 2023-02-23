@@ -8,11 +8,6 @@ const recordException = (err: unknown): void => {
   trace.getActiveSpan()?.recordException(exception);
 };
 
-export const logException = (err: unknown): void => {
-  recordException(err);
-  console.error(getException(err));
-};
-
 const getTracer = (): Tracer => {
   return trace.getTracer(process.env.COMPONENT_NAME ?? '');
 };
