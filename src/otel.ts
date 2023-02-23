@@ -47,9 +47,9 @@ export async function asSpan<T>(
   });
 }
 
-// withSpanSync returns F so generics of passed F stays intact, e.g:
-//   const fn = <T>(t: T) => t
-//   const wrapped = withSpanSync("fn", fn)
+// withSpan returns F so generics of passed F stays intact, e.g:
+//   const fn = <T>(t: T) => Promise.resolve(t)
+//   const wrapped = withSpan("fn", fn)
 //   wrapped<number>(10) // works only when withSpan explicitly returns F
 export const withSpan = <F extends (...args: any[]) => Promise<any>>(
   name: string,
