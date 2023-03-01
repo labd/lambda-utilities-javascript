@@ -6,7 +6,12 @@ import {
   ExtraErrorData,
 } from '@sentry/integrations';
 
-if (process.env.SENTRY_DSN) {
+export const setupLambdaSentry = () => {
+  if (!process.env.SENTRY_DSN) {
+    console.warn('Sentry DSN not set, skipping Sentry setup');
+    return;
+  }
+
   AWSLambda.init({
     dsn: process.env.SENTRY_DSN,
     enabled: !!process.env.SENTRY_DSN,
@@ -35,6 +40,6 @@ if (process.env.SENTRY_DSN) {
     scope.setTag('service_name', process.env.COMPONENT_NAME || '');
     scope.setTag('site', process.env.SITE || '');
   });
-}
+};
 
-export const Sentry = AWSLambda;
+export const LambdaSentry = AWSLambda;

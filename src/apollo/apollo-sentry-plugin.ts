@@ -1,12 +1,12 @@
 import { SeverityLevel } from '@sentry/serverless';
-import { Sentry } from '../sentry';
+import { LambdaSentry } from '../sentry';
 
 export const apolloSentryPlugin = {
   requestDidStart() {
     return {
       didEncounterErrors(ctx: any) {
         for (const err of ctx.errors) {
-          Sentry.withScope(scope => {
+          LambdaSentry.withScope(scope => {
             scope.setTag('kind', ctx.operation.operation);
             scope.setExtra('query', ctx.request.query);
             scope.setExtra('variables', ctx.request.variables);
@@ -17,7 +17,7 @@ export const apolloSentryPlugin = {
                 level: 'debug' as SeverityLevel,
               });
             }
-            Sentry.captureException(err);
+            LambdaSentry.captureException(err);
           });
         }
       },

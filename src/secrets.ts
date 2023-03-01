@@ -4,21 +4,28 @@ import {
 } from '@aws-sdk/client-secrets-manager';
 import assert from 'assert';
 
-assert(
-  process.env.AWS_REGION,
-  'getSecret requires process.env.AWS_REGION to be set'
-);
+const secretCache: Record<string, string> = {};
+let defaultClient: SecretsManagerClient | undefined;
 
-const client = new SecretsManagerClient({
-  region: process.env.AWS_REGION,
-  endpoint: process.env.LOCALSTACK_URL,
-});
+const getClient = (): SecretsManagerClient => {
+  if (!defaultClient) {
+    assert(
+      process.env.AWS_REGION,
+      'getSecret requires process.env.AWS_REGION to be set'
+    );
+    defaultClient = new SecretsManagerClient({
+      region: process.env.AWS_REGION,
+      endpoint: process.env.LOCALSTACK_URL,
+    });
+  }
+  return defaultClient;
+};
 
 export const getSecret = async (secretName: string): Promise<string> => {
   return new Promise(async (resolve, reject) => {
     try {
       const command = new GetSecretValueCommand({ SecretId: secretName });
-      const response = await client.send(command);
+      const response = await getClient().send(command);
 
       if (!response) {
         return reject(new Error('no data from secretsmanager'));
@@ -45,8 +52,6 @@ export const getSecret = async (secretName: string): Promise<string> => {
     }
   });
 };
-
-const secretCache: Record<string, string> = {};
 
 export const getAppSecret = async (secretName: string) => {
   if (secretCache[secretName]) {
