@@ -2,7 +2,7 @@ import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 
 let defaultClient: SQSClient | undefined;
 
-const getClient = (): SQSClient => {
+export const getSqsClient = (): SQSClient => {
   if (!defaultClient) {
     defaultClient = new SQSClient({
       region: process.env.AWS_REGION,
@@ -30,7 +30,7 @@ export const sendSqsMessage = async (
 
   try {
     const command = new SendMessageCommand(params);
-    const data = await getClient().send(command);
+    const data = await getSqsClient().send(command);
 
     console.info('Send message to SQS queue');
     console.info(' > messageId:', data.MessageId);

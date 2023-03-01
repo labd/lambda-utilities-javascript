@@ -7,7 +7,7 @@ import assert from 'assert';
 const secretCache: Record<string, string> = {};
 let defaultClient: SecretsManagerClient | undefined;
 
-const getClient = (): SecretsManagerClient => {
+export const getSecretsClient = (): SecretsManagerClient => {
   if (!defaultClient) {
     assert(
       process.env.AWS_REGION,
@@ -25,7 +25,7 @@ export const getSecret = async (secretName: string): Promise<string> => {
   return new Promise(async (resolve, reject) => {
     try {
       const command = new GetSecretValueCommand({ SecretId: secretName });
-      const response = await getClient().send(command);
+      const response = await getSecretsClient().send(command);
 
       if (!response) {
         return reject(new Error('no data from secretsmanager'));
